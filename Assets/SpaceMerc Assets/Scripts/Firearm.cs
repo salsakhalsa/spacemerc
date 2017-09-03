@@ -33,7 +33,14 @@ public class Firearm : MonoBehaviour
         muzzleFlash.SetActive(false);
 
 
-        nextShootTime = Time.time + roundsPerSecond;
+        nextShootTime = Time.time + 1f / roundsPerSecond;
+
+        for(int i = 0; i < ammoCount; i++)
+        {
+            //Instantiate(projectile, projectileSpawn.position, 
+              //  projectileSpawn.transform.rotation * Quaternion.Euler(Random.Range(0, accuracy), Random.Range(0, accuracy), Random.Range(0, accuracy)));
+        }
+
     }
 
     // Update is called once per frame
@@ -48,10 +55,13 @@ public class Firearm : MonoBehaviour
         doFire = true;
         if (isFirstShot)
         {
+            
+            FireProjectile();
             isFirstShot = false;
-            nextShootTime = Time.time + roundsPerSecond;
+            //nextShootTime = Time.time + 1f / roundsPerSecond;
         }
-        FireProjectile();
+        else
+            FireProjectile();
     }
 
     public void EndFire()
@@ -76,10 +86,8 @@ public class Firearm : MonoBehaviour
     {
 
         bool doPauseForFlash = (1f / roundsPerSecond) - (1f / 20f) > 0 ? true : false;
-        Debug.Log(Time.time > nextShootTime);
         while (doFire && ammoCount > 0 && !isReloading && Time.time > nextShootTime)
         {
-            
 
             Instantiate(projectile, projectileSpawn.position, 
                 projectileSpawn.transform.rotation * Quaternion.Euler(Random.Range(0, accuracy), Random.Range(0, accuracy), Random.Range(0, accuracy)));
@@ -96,10 +104,11 @@ public class Firearm : MonoBehaviour
             if(ammoCount > 0)
                 ammoCount--;
             Transform casingSpawn = casingSpawns[(int)Mathf.Floor(Random.Range(0, casingSpawns.Length))];
-            Instantiate(casing, casingSpawn.position, casingSpawn.localRotation * Quaternion.Euler(Random.Range(0,5), Random.Range(0, 5), Random.Range(0, 5)));
-            nextShootTime += roundsPerSecond;
+            Instantiate(casing, casingSpawn.position, casingSpawn.localRotation);// * Quaternion.Euler(Random.Range(0,5), Random.Range(0, 5), Random.Range(0, 5)));
+            nextShootTime = isFirstShot? Time.time + 1f / roundsPerSecond : nextShootTime + 1f / roundsPerSecond;
         }
         muzzleFlash.SetActive(false);
+        nextShootTime = Time.time + 1f / roundsPerSecond;
     }
 
     private IEnumerator DoReload()

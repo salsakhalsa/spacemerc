@@ -20,7 +20,7 @@ public class WeaponManager : MonoBehaviour {
     {
         currentFirearm.transform.localRotation = Quaternion.Euler(90f, 0 , 0) * Quaternion.Euler(Camera.main.transform.localRotation.eulerAngles.x, 0, 0);
 
-        if(Input.GetButtonDown
+        if(Input.GetButton
             ("Fire1"))
         {
             firearm.DoFire();
